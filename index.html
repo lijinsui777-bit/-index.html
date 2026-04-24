@@ -1,0 +1,917 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>科技出海表达自查 · v1.1</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Syne:wght@400;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,400&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --brand: #0A0A0A;
+    --accent: #C8F04B;
+    --muted: #6B7280;
+    --surface: #F7F7F5;
+    --bd: rgba(0,0,0,0.08);
+    --danger: #DC2626;
+    --warn: #D97706;
+    --ok: #16A34A;
+    --white: #FFFFFF;
+  }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--white);
+    font-family: 'DM Sans', sans-serif;
+    color: var(--brand);
+    min-height: 100vh;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* ── LAYOUT ── */
+  .wrap { max-width: 680px; margin: 0 auto; padding: 0 1.25rem 5rem; }
+
+  /* ── HERO ── */
+  .hero {
+    padding: 4rem 0 2.5rem;
+    border-bottom: 1px solid var(--bd);
+    margin-bottom: 2.5rem;
+    position: relative;
+  }
+
+  .hero::before {
+    content: '';
+    position: absolute;
+    top: 0; left: -1.25rem; right: -1.25rem; height: 3px;
+    background: linear-gradient(90deg, var(--accent) 0%, #A8D840 50%, #6EC6CA 100%);
+  }
+
+  .hero-eyebrow {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 1.5rem;
+  }
+
+  .hero-eyebrow::before {
+    content: '';
+    display: inline-block;
+    width: 20px; height: 1px;
+    background: var(--accent);
+  }
+
+  .hero h1 {
+    font-family: 'Syne', sans-serif;
+    font-size: clamp(26px, 6vw, 44px);
+    font-weight: 800;
+    line-height: 1.1;
+    letter-spacing: -0.03em;
+    margin-bottom: 1rem;
+  }
+
+  .hero h1 .dim { color: #CBD5E1; font-weight: 600; }
+  .hero h1 .hi { color: var(--brand); }
+
+  .hero-body {
+    font-size: 14px;
+    color: var(--muted);
+    line-height: 1.7;
+    max-width: 480px;
+  }
+
+  .hero-body strong { color: var(--brand); font-weight: 500; }
+
+  /* ── PROGRESS ── */
+  .progress-panel {
+    background: var(--brand);
+    color: white;
+    border-radius: 12px;
+    padding: 1.25rem 1.5rem;
+    margin-bottom: 2rem;
+    display: flex;
+    align-items: center;
+    gap: 1.25rem;
+  }
+
+  .prog-score {
+    font-family: 'Syne', sans-serif;
+    font-size: 36px;
+    font-weight: 800;
+    line-height: 1;
+    color: var(--accent);
+    min-width: 64px;
+  }
+
+  .prog-right { flex: 1; }
+
+  .prog-track {
+    background: rgba(255,255,255,0.12);
+    border-radius: 2px;
+    height: 3px;
+    overflow: hidden;
+    margin-bottom: 6px;
+  }
+
+  .prog-fill {
+    height: 3px;
+    border-radius: 2px;
+    background: var(--accent);
+    transition: width 0.5s cubic-bezier(.4,0,.2,1);
+    width: 0%;
+  }
+
+  .prog-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.1em;
+    color: rgba(255,255,255,0.45);
+  }
+
+  /* ── DIMENSION CARDS ── */
+  .dim-card {
+    border: 1px solid var(--bd);
+    border-radius: 12px;
+    margin-bottom: 10px;
+    overflow: hidden;
+    transition: border-color 0.2s, box-shadow 0.2s;
+  }
+
+  .dim-card:hover { border-color: rgba(0,0,0,0.15); box-shadow: 0 2px 12px rgba(0,0,0,0.04); }
+  .dim-card.is-zero { border-color: rgba(10,10,10,0.2); }
+  .dim-card.complete { border-color: var(--ok); }
+
+  .dim-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 1rem 1.25rem;
+    cursor: pointer;
+    user-select: none;
+    transition: background 0.15s;
+  }
+
+  .dim-header:hover { background: var(--surface); }
+
+  .dim-num {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    color: #CBD5E1;
+    letter-spacing: 0.12em;
+    min-width: 20px;
+  }
+
+  .dim-title {
+    font-family: 'Syne', sans-serif;
+    font-size: 13px;
+    font-weight: 700;
+    flex: 1;
+    line-height: 1.3;
+  }
+
+  .dim-chip {
+    font-family: 'DM Mono', monospace;
+    font-size: 9px;
+    padding: 3px 8px;
+    border-radius: 3px;
+    letter-spacing: 0.08em;
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+
+  .dim-badge {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    color: var(--muted);
+    min-width: 28px;
+    text-align: right;
+    flex-shrink: 0;
+  }
+
+  .dim-arrow {
+    width: 18px;
+    height: 18px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #CBD5E1;
+    font-size: 10px;
+    transition: transform 0.2s;
+    flex-shrink: 0;
+  }
+
+  .dim-header.open .dim-arrow { transform: rotate(180deg); }
+
+  .dim-body {
+    display: none;
+    border-top: 1px solid var(--bd);
+  }
+
+  .dim-body.open { display: block; }
+
+  .dim-intro {
+    padding: 0.9rem 1.25rem;
+    font-size: 12px;
+    color: var(--muted);
+    line-height: 1.7;
+    font-style: italic;
+    border-bottom: 1px solid var(--bd);
+    background: var(--surface);
+  }
+
+  /* ── CHECK ITEMS ── */
+  .check-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 0.9rem 1.25rem;
+    border-bottom: 1px solid var(--bd);
+    transition: background 0.1s;
+  }
+
+  .check-item:last-child { border-bottom: none; }
+  .check-item:hover { background: #FAFAFA; }
+
+  .check-box {
+    width: 17px;
+    height: 17px;
+    border: 1.5px solid #D1D5DB;
+    border-radius: 4px;
+    flex-shrink: 0;
+    margin-top: 1px;
+    cursor: pointer;
+    position: relative;
+    transition: all 0.15s;
+  }
+
+  .check-box:hover { border-color: var(--brand); }
+
+  .check-box.checked {
+    background: var(--ok);
+    border-color: var(--ok);
+  }
+
+  .check-box.checked::after {
+    content: '';
+    position: absolute;
+    left: 4px;
+    top: 1px;
+    width: 5px;
+    height: 9px;
+    border: 2px solid white;
+    border-top: none;
+    border-left: none;
+    transform: rotate(42deg);
+  }
+
+  .check-content { flex: 1; }
+
+  .check-label {
+    font-size: 13px;
+    font-weight: 500;
+    line-height: 1.4;
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-bottom: 3px;
+  }
+
+  .check-desc {
+    font-size: 12px;
+    color: var(--muted);
+    line-height: 1.6;
+  }
+
+  .risk-badge {
+    font-family: 'DM Mono', monospace;
+    font-size: 9px;
+    padding: 2px 6px;
+    border-radius: 3px;
+    letter-spacing: 0.07em;
+    flex-shrink: 0;
+  }
+
+  .risk-h { background: #FEF2F2; color: #991B1B; }
+  .risk-m { background: #FFFBEB; color: #92400E; }
+  .risk-l { background: #F0FDF4; color: #166534; }
+
+  /* ── RESULT SECTION ── */
+  .result-section {
+    display: none;
+    margin-top: 2rem;
+  }
+
+  .result-section.visible { display: block; }
+
+  .result-header {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 1rem;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .result-header::before {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--bd);
+  }
+
+  .diag-card {
+    border: 1px solid var(--bd);
+    border-radius: 10px;
+    overflow: hidden;
+    margin-bottom: 8px;
+  }
+
+  .diag-card-head {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 0.75rem 1rem;
+    background: var(--surface);
+  }
+
+  .diag-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--danger);
+    flex-shrink: 0;
+  }
+
+  .diag-dim-name {
+    font-family: 'Syne', sans-serif;
+    font-size: 12px;
+    font-weight: 700;
+    flex: 1;
+  }
+
+  .diag-count {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    color: var(--danger);
+  }
+
+  .diag-card-body {
+    padding: 0.75rem 1rem;
+    font-size: 12px;
+    color: var(--muted);
+    line-height: 1.7;
+    border-top: 1px solid var(--bd);
+  }
+
+  /* ── CTA ── */
+  .cta-block {
+    display: none;
+    background: var(--brand);
+    border-radius: 14px;
+    padding: 2rem;
+    margin-top: 1.5rem;
+    color: white;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .cta-block::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0; height: 2px;
+    background: linear-gradient(90deg, var(--accent), #6EC6CA);
+  }
+
+  .cta-block.visible { display: block; }
+
+  .cta-eyebrow {
+    font-family: 'DM Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 0.18em;
+    color: var(--accent);
+    text-transform: uppercase;
+    margin-bottom: 0.75rem;
+  }
+
+  .cta-quote {
+    font-family: 'Syne', sans-serif;
+    font-size: 15px;
+    font-weight: 600;
+    line-height: 1.55;
+    color: white;
+    margin-bottom: 0.5rem;
+    font-style: italic;
+  }
+
+  .cta-attr {
+    font-size: 12px;
+    color: rgba(255,255,255,0.4);
+    margin-bottom: 1.5rem;
+  }
+
+  .cta-divider {
+    height: 1px;
+    background: rgba(255,255,255,0.08);
+    margin-bottom: 1.5rem;
+  }
+
+  .cta-cta-text {
+    font-size: 13px;
+    color: rgba(255,255,255,0.6);
+    line-height: 1.7;
+    margin-bottom: 1.25rem;
+  }
+
+  /* ── GATE FORM ── */
+  .gate-section {
+    display: none;
+    margin-top: 1rem;
+  }
+
+  .gate-section.visible { display: block; }
+
+  .gate-title {
+    font-family: 'Syne', sans-serif;
+    font-size: 14px;
+    font-weight: 700;
+    color: white;
+    margin-bottom: 0.3rem;
+  }
+
+  .gate-sub {
+    font-size: 12px;
+    color: rgba(255,255,255,0.5);
+    margin-bottom: 1rem;
+    line-height: 1.6;
+  }
+
+  .gate-fields {
+    display: grid;
+    gap: 8px;
+  }
+
+  .gate-input {
+    background: rgba(255,255,255,0.07);
+    border: 1px solid rgba(255,255,255,0.14);
+    border-radius: 8px;
+    padding: 10px 14px;
+    font-size: 13px;
+    color: white;
+    font-family: 'DM Sans', sans-serif;
+    outline: none;
+    width: 100%;
+    transition: border-color 0.15s;
+  }
+
+  .gate-input::placeholder { color: rgba(255,255,255,0.28); }
+  .gate-input:focus { border-color: var(--accent); }
+
+  .gate-submit {
+    background: var(--accent);
+    color: var(--brand);
+    border: none;
+    border-radius: 8px;
+    padding: 11px 20px;
+    font-size: 13px;
+    font-weight: 700;
+    font-family: 'Syne', sans-serif;
+    cursor: pointer;
+    width: 100%;
+    margin-top: 4px;
+    transition: opacity 0.15s, transform 0.1s;
+    letter-spacing: -0.01em;
+  }
+
+  .gate-submit:hover { opacity: 0.88; }
+  .gate-submit:active { transform: scale(0.99); }
+
+  .gate-note {
+    font-size: 10px;
+    color: rgba(255,255,255,0.25);
+    margin-top: 8px;
+    line-height: 1.5;
+    text-align: center;
+  }
+
+  /* ── SUCCESS STATE ── */
+  .success-state {
+    text-align: center;
+    padding: 1rem 0;
+  }
+
+  .success-icon {
+    font-size: 28px;
+    margin-bottom: 0.5rem;
+  }
+
+  .success-title {
+    font-family: 'Syne', sans-serif;
+    font-size: 16px;
+    font-weight: 700;
+    color: white;
+    margin-bottom: 0.4rem;
+  }
+
+  .success-body {
+    font-size: 12px;
+    color: rgba(255,255,255,0.5);
+    line-height: 1.6;
+    margin-bottom: 1rem;
+  }
+
+  .success-stats {
+    display: inline-flex;
+    gap: 16px;
+    background: rgba(255,255,255,0.06);
+    border-radius: 8px;
+    padding: 10px 16px;
+  }
+
+  .stat-item { text-align: center; }
+
+  .stat-val {
+    font-family: 'DM Mono', monospace;
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--accent);
+    display: block;
+  }
+
+  .stat-lbl {
+    font-family: 'DM Mono', monospace;
+    font-size: 9px;
+    color: rgba(255,255,255,0.3);
+    letter-spacing: 0.08em;
+    display: block;
+    margin-top: 2px;
+  }
+
+  /* ── FOOTER ── */
+  .footer {
+    margin-top: 3.5rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid var(--bd);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .footer-brand {
+    font-family: 'DM Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 0.15em;
+    color: #CBD5E1;
+    text-transform: uppercase;
+  }
+
+  .footer-version {
+    font-family: 'DM Mono', monospace;
+    font-size: 9px;
+    color: #E2E8F0;
+    background: var(--surface);
+    padding: 3px 8px;
+    border-radius: 3px;
+    letter-spacing: 0.08em;
+  }
+
+  /* ── UTILS ── */
+  .zero-pill {
+    display: inline-block;
+    font-family: 'DM Mono', monospace;
+    font-size: 8px;
+    background: var(--brand);
+    color: var(--accent);
+    padding: 2px 6px;
+    border-radius: 3px;
+    letter-spacing: 0.1em;
+    vertical-align: middle;
+    margin-left: 4px;
+  }
+
+  @media (max-width: 480px) {
+    .progress-panel { flex-direction: column; align-items: flex-start; gap: 0.75rem; }
+    .prog-score { font-size: 28px; }
+    .footer { flex-direction: column; gap: 8px; align-items: flex-start; }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <!-- HERO -->
+  <div class="hero">
+    <div class="hero-eyebrow">科技出海表达 · 自我审计工具 v1.1</div>
+    <h1>
+      <span class="hi">你的品牌</span><br>
+      <span class="hi">出海后</span><br>
+      <span class="hi">表达有效吗？</span>
+    </h1>
+    <p class="hero-body" style="margin-top:1rem">
+      这不是拼写检查，而是一次<strong>品牌资产诊断</strong>。<br>
+      完成 18 个检查项，你会得到一份真实的风险清单。
+    </p>
+  </div>
+
+  <!-- PROGRESS -->
+  <div class="progress-panel">
+    <div class="prog-score" id="scoreNum">0%</div>
+    <div class="prog-right">
+      <div class="prog-track"><div class="prog-fill" id="progFill"></div></div>
+      <div class="prog-label" id="progLabel">尚未开始 · 完成审计后查看诊断报告</div>
+    </div>
+  </div>
+
+  <!-- DIMENSIONS -->
+  <div id="dimContainer"></div>
+
+  <!-- RESULT -->
+  <div class="result-section" id="resultSection">
+    <div class="result-header">诊断报告</div>
+    <div id="diagCards"></div>
+  </div>
+
+  <!-- CTA -->
+  <div class="cta-block" id="ctaBlock">
+    <div class="cta-eyebrow">Language System Advisor</div>
+    <div class="cta-quote">"一致性不是为了整齐，而是为了降低用户的认知成本。当你的营销承诺与使用体验达成 100% 文本和谐时，转化与忠诚才会自然发生。"</div>
+    <div class="cta-attr">——李沁芸 Joanna 出海科技品牌语言系统顾问</div>
+    <div class="cta-divider"></div>
+    <div class="cta-cta-text">你已经知道问题在哪里了。<br>但知道问题的位置，和拥有修复它的系统，是两件完全不同的事。<br>如果你们最近也在思考这块，我们可以约 20 分钟简单交流一下。我很乐意基于你们现有的内容，分享一些具体观察。<br>联络邮箱：qinyun.li@hotmail.com，案例可见 Linkedin: Qinyun Joanna Li</div>
+
+  </div>
+
+  <!-- FOOTER -->
+  <div class="footer">
+    <div class="footer-brand">Science of Global Expression</div>
+    <div class="footer-version">Internal Audit Tool · v1.1</div>
+  </div>
+
+</div>
+
+<script>
+var DIMS = [
+  {
+    id:'fi', num:'00', zero:true,
+    title:'第一印象 · First Impression',
+    chip:'先决条件', chipBg:'#0A0A0A', chipColor:'#C8F04B',
+    intro:'一致性建立在有话可说的基础上。在检查说得准不准之前，先问一个更根本的问题：你有没有说到用户真正想听的？',
+    checks:[
+      {id:'f1',r:'h',label:'3 秒定位测试',
+       desc:'让一个从未见过你产品的人看主页 3 秒后离开——他能说清楚"这是用来做什么的、给谁用的"吗？'},
+      {id:'f2',r:'h',label:'去掉参数之后',
+       desc:'把所有规格数字（分辨率、续航、重量）从产品页面抹掉，剩下的文字还能让人产生"我想要这个"的冲动吗？'},
+      {id:'f3',r:'m',label:'场景可想象性',
+       desc:'读完你的核心卖点，用户脑海中会浮现一个具体的使用画面，还是只得到了功能描述？'}
+    ],
+    fail:'在一致性问题之前，存在更基础的表达失效：你的文本可能没有在用户心里激起继续了解的冲动。这不是翻译或校对能解决的问题，而需要对市场策略和产品亮点有充分理解。'
+  },
+  {
+    id:'tm', num:'01',
+    title:'核心术语库 · Terminology',
+    chip:'认知负担', chipBg:'#FEF2F2', chipColor:'#991B1B',
+    intro:'出海品牌最常见的隐性损耗：同一个功能，官网叫A，App叫B，说明书叫C。用户不是在理解你的产品，而是在猜测你的意思。',
+    checks:[
+      {id:'t1',r:'h',label:'术语唯一性',
+       desc:'你的核心技术卖点在官网、App界面、产品说明书中使用完全相同的称呼，没有同义词混用的情况'},
+      {id:'t2',r:'m',label:'缩写首次标注',
+       desc:'所有技术缩写（FOV、SDK、OIS、HDR等）在文档中首次出现时均有完整英文全称标注'},
+      {id:'t3',r:'h',label:'竞品商标回避',
+       desc:'营销文案中没有出现任何可能构成混淆的竞品注册商标或受法律保护的特定表达方式'}
+    ],
+    fail:'术语混用让用户在购买决策关键时刻产生认知摩擦，直接影响转化率。这不是翻译问题，是系统性架构问题。'
+  },
+  {
+    id:'vo', num:'02',
+    title:'品牌人格 · Voice & Tone',
+    chip:'人格分裂', chipBg:'#FFFBEB', chipColor:'#92400E',
+    intro:'营销团队写出了充满激情的广告语，工程师写出了技术文档式的App提示。用户会感受到这种割裂，即便他们说不清楚为什么。',
+    checks:[
+      {id:'v1',r:'h',label:'跨渠道情绪一致性',
+       desc:'营销文本的感染力与说明书/App界面的专业感，在语气上能被识别为来自同一个品牌'},
+      {id:'v2',r:'m',label:'人称代词统一',
+       desc:'全线文本统一采用"We/Our"（亲和型）或品牌名第三人称（疏离型），没有随意混用'},
+      {id:'v3',r:'m',label:'错误提示人性化',
+       desc:'App内的报错信息不只是代码和技术描述，而是包含用户可执行的下一步建议'}
+    ],
+    fail:'品牌人格断裂是用户信任流失的主要来源之一。营销承诺与使用体验之间的落差，会以退货率和差评的形式量化呈现。'
+  },
+  {
+    id:'ui', num:'03',
+    title:'UI/UX文案 · Interface Copy',
+    chip:'廉价感', chipBg:'#FFFBEB', chipColor:'#92400E',
+    intro:'一个溢出按钮边框的英文翻译，足以让用户对整个品牌产生不够专业的印象。界面文字是品牌的皮肤，出问题时所有人都看见。',
+    checks:[
+      {id:'u1',r:'h',label:'按钮文字长度适配',
+       desc:'关键操作按钮的英文翻译在所有主要屏幕尺寸下没有出现溢出或被截断'},
+      {id:'u2',r:'l',label:'语义完整折行',
+       desc:'英文长句在手机端展示时，自动换行不会切断语义单元'},
+      {id:'u3',r:'m',label:'标点符号规范',
+       desc:'全文统一使用英文半角标点，没有出现中英文标点混用的情况'}
+    ],
+    fail:'UI文案排版问题是廉价感的最直接来源。科技出海品牌在硬件上投入巨大，但往往在被忽视的细节里丢分。'
+  },
+  {
+    id:'lc', num:'04',
+    title:'跨文化合规 · Localization',
+    chip:'信任流失', chipBg:'#FEF2F2', chipColor:'#991B1B',
+    intro:'中式英语不只是语法问题——它是一个信号，让海外用户觉得这个品牌不了解我的世界。',
+    checks:[
+      {id:'l1',r:'h',label:'度量衡本地化',
+       desc:'面向北美市场的文本将公制单位转换为英制单位，面向欧洲保持公制，有明确的区域版本管理机制'},
+      {id:'l2',r:'m',label:'行动指令地道化',
+       desc:'页面行动引导不是字面翻译的"点击这里"，而是符合当地用户习惯的表达'},
+      {id:'l3',r:'h',label:'文化禁忌排查',
+       desc:'宣传素材中的颜色搭配、手势符号、数字选择已针对目标市场的文化禁忌进行过专项检查'}
+    ],
+    fail:'本地化失误可以是低成本的尴尬，也可以是高代价的法律风险。最难修复的，是已经在当地市场建立的负面印象。'
+  },
+  {
+    id:'as', num:'05',
+    title:'内容资产管理 · Assets',
+    chip:'效率黑洞', chipBg:'#EFF6FF', chipColor:'#1E40AF',
+    intro:'每次产品迭代都要从零开始翻译，每次上新都要重新讨论用词——这不是翻译问题，而是你没有建立语言资产。没有系统，翻译永远是成本，而不是投资。',
+    checks:[
+      {id:'a1',r:'h',label:'翻译记忆库建立',
+       desc:'你拥有一个可复用的术语表和翻译记忆库，新内容翻译时可以调用已有的标准译文'},
+      {id:'a2',r:'h',label:'多端同步更新机制',
+       desc:'当产品功能更新时，官网、App、说明书、渠道商营销素材有明确的文案同步更新流程'},
+      {id:'a3',r:'m',label:'版本溯源能力',
+       desc:'你能快速定位任何一条对外发布文案的历史版本，并了解它是何时、为何被更新的'}
+    ],
+    fail:'没有内容资产管理体系，规模越大、市场越多，混乱就越难控制。这是从"会说话"到"说得好"之间最被低估的门槛。'
+  }
+];
+
+var checked = {};
+var totalItems = 0;
+var riskMap = {h:'高风险',m:'中风险',l:'注意'};
+var riskClass = {h:'risk-h',m:'risk-m',l:'risk-l'};
+
+function countChecked() { return Object.values(checked).filter(Boolean).length; }
+
+function updateProgress() {
+  var done = countChecked();
+  var pct = totalItems > 0 ? Math.round(done / totalItems * 100) : 0;
+  document.getElementById('scoreNum').textContent = pct + '%';
+  document.getElementById('progFill').style.width = pct + '%';
+  if (done === 0) {
+    document.getElementById('progLabel').textContent = '尚未开始 · 完成审计后查看诊断报告';
+  } else {
+    var fails = totalItems - done;
+    document.getElementById('progLabel').textContent = '已完成 ' + done + '/' + totalItems + ' 项 · 识别到 ' + fails + ' 个潜在风险点';
+  }
+  if (checkEachDimensionHasAtLeastOne()) showResults();
+}
+function checkEachDimensionHasAtLeastOne() {
+  for (var i = 0; i < DIMS.length; i++) {
+    var dim = DIMS[i];
+    var hasAnyChecked = dim.checks.some(function(c) { return checked[c.id]; });
+    if (!hasAnyChecked) return false;
+  }
+  return true;
+}
+
+function showResults() {
+  var failDims = DIMS.filter(function(d) {
+    return d.checks.some(function(c) { return !checked[c.id]; });
+  });
+
+  var html = '';
+  failDims.forEach(function(d) {
+    var failCount = d.checks.filter(function(c) { return !checked[c.id]; }).length;
+    html += '<div class="diag-card">'
+      + '<div class="diag-card-head">'
+      + '<div class="diag-dot"></div>'
+      + '<div class="diag-dim-name">' + d.title + '</div>'
+      + '<div class="diag-count">' + failCount + ' 项未通过</div>'
+      + '</div>'
+      + '<div class="diag-card-body">' + d.fail + '</div>'
+      + '</div>';
+  });
+
+  if (failDims.length === 0) {
+    html = '<div class="diag-card"><div class="diag-card-body" style="color:var(--ok);font-weight:500">✓ 恭喜——你的品牌语言体系已相当完善。如需进一步系统化，欢迎联系讨论。</div></div>';
+  }
+
+  document.getElementById('diagCards').innerHTML = html;
+  document.getElementById('resultSection').classList.add('visible');
+  document.getElementById('ctaBlock').classList.add('visible');
+  document.getElementById('gateSection').classList.add('visible');
+}
+
+function toggleDim(id) {
+  var hd = document.querySelector('#DC-' + id + ' .dim-header');
+  var bd = document.getElementById('DB-' + id);
+  hd.classList.toggle('open');
+  bd.classList.toggle('open');
+}
+
+function toggleCheck(cid, dimIdx) {
+  checked[cid] = !checked[cid];
+  var box = document.getElementById('CB-' + cid);
+  box.classList.toggle('checked', !!checked[cid]);
+
+  var dim = DIMS[dimIdx];
+  var done = dim.checks.filter(function(c) { return checked[c.id]; }).length;
+  var badge = document.getElementById('BG-' + dim.id);
+  badge.textContent = done + '/' + dim.checks.length;
+
+  if (done === dim.checks.length) {
+    badge.style.color = 'var(--ok)';
+    document.getElementById('DC-' + dim.id).classList.add('complete');
+    if (dimIdx < DIMS.length - 1) {
+      var nextDim = DIMS[dimIdx + 1];
+      var nextHd = document.querySelector('#DC-' + nextDim.id + ' .dim-header');
+      var nextBd = document.getElementById('DB-' + nextDim.id);
+      nextHd.classList.add('open');
+      nextBd.classList.add('open');
+    }
+  } else {
+    badge.style.color = done > 0 ? 'var(--warn)' : 'var(--muted)';
+    document.getElementById('DC-' + dim.id).classList.remove('complete');
+  }
+
+  updateProgress();
+}
+
+function submitGate() {
+  var n = document.getElementById('gName').value.trim();
+  var c = document.getElementById('gCompany').value.trim();
+  var e = document.getElementById('gEmail').value.trim();
+  if (!n || !c || !e) { alert('请填写完整信息'); return; }
+
+  var done = countChecked();
+  var failDims = DIMS.filter(function(d) { return d.checks.some(function(c) { return !checked[c.id]; }); });
+
+  document.getElementById('gateSection').innerHTML =
+    '<div class="success-state">'
+    + '<div class="success-icon">✓</div>'
+    + '<div class="success-title">审计报告已记录</div>'
+    + '<div class="success-body">' + n + '，你的审计结果已收到。<br>我们将在24小时内通过 ' + e + ' 与你确认沟通时间。</div>'
+    + '<div class="success-stats">'
+    + '<div class="stat-item"><span class="stat-val">' + Math.round(done/totalItems*100) + '%</span><span class="stat-lbl">完成度</span></div>'
+    + '<div class="stat-item"><span class="stat-val">' + failDims.length + '/6</span><span class="stat-lbl">风险维度</span></div>'
+    + '<div class="stat-item"><span class="stat-val">' + (totalItems-done) + '</span><span class="stat-lbl">未通过项</span></div>'
+    + '</div></div>';
+}
+
+// BUILD DOM
+function build() {
+  var container = document.getElementById('dimContainer');
+  DIMS.forEach(function(dim, di) {
+    totalItems += dim.checks.length;
+    var el = document.createElement('div');
+    el.className = 'dim-card' + (dim.zero ? ' is-zero' : '');
+    el.id = 'DC-' + dim.id;
+
+    var zpill = dim.zero ? '<span class="zero-pill">先决条件</span>' : '';
+
+    var checksHtml = dim.checks.map(function(c) {
+      return '<div class="check-item">'
+        + '<div class="check-box" id="CB-' + c.id + '" onclick="toggleCheck(\'' + c.id + '\',' + di + ')"></div>'
+        + '<div class="check-content">'
+        + '<div class="check-label">' + c.label
+        + '<span class="risk-badge ' + riskClass[c.r] + '">' + riskMap[c.r] + '</span>'
+        + '</div>'
+        + '<div class="check-desc">' + c.desc + '</div>'
+        + '</div></div>';
+    }).join('');
+
+    el.innerHTML =
+      '<div class="dim-header" onclick="toggleDim(\'' + dim.id + '\')">'
+      + '<span class="dim-num">' + dim.num + '</span>'
+      + '<span class="dim-title">' + dim.title + zpill + '</span>'
+      + '<span class="dim-chip" style="background:' + dim.chipBg + ';color:' + dim.chipColor + '">' + dim.chip + '</span>'
+      + '<span class="dim-badge" id="BG-' + dim.id + '">0/' + dim.checks.length + '</span>'
+      + '<span class="dim-arrow">▾</span>'
+      + '</div>'
+      + '<div class="dim-body" id="DB-' + dim.id + '">'
+      + '<div class="dim-intro">' + dim.intro + '</div>'
+      + checksHtml
+      + '</div>';
+
+    container.appendChild(el);
+  });
+
+  // open first by default
+  document.querySelector('#DC-fi .dim-header').classList.add('open');
+  document.getElementById('DB-fi').classList.add('open');
+
+  updateProgress();
+}
+
+build();
+</script>
+</body>
+</html>
